@@ -18,9 +18,15 @@ The following features are provided by this script:
 ## Download Binary
 
 ```bash
-$ wget https://github.com/jx2lee/nhncloud-instctl/releases/download/v0.1/nhncloud-instctl && \
-       chmod +x nhncloud-instctl && \
-       mv nhncloud-instctl /usr/local/bin/nhncloud-instctl
+# in macos..
+$ wget https://github.com/jx2lee/nhncloud-instctl/releases/download/v0.1/nhncloud-instctl-darwin && \
+       chmod +x nhncloud-instctl-darwin && \
+       mv nhncloud-instctl-darwin /usr/local/bin/nhncloud-instctl
+
+# in linux(x86_64)..
+$ wget https://github.com/jx2lee/nhncloud-instctl/releases/download/v0.1/nhncloud-instctl-Linux-x86-64 && \
+       chmod +x nhncloud-instctl-Linux-x86-64 && \
+       mv nhncloud-instctl-Linux-x86-64 /usr/local/bin/nhncloud-instctl
 ```
 
 ## Set Configuration
