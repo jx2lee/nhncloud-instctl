@@ -94,16 +94,16 @@ Last login: Sat Mar 20 13:12:17 2021 from 211.178.107.54
 
 The ability to start or stop the existing instance.  
 ```bash
-$ nhncloud-instctl start(or stop) {exiting_instance_name}
+$ nhncloud-instctl {start or start} {exiting_instance_name} -r {region kr1, kr2 or jp1}
 ```
 
 ```bash
 # start
-❯ nhncloud-instctl start master001
+❯ nhncloud-instctl start master001 -r kr1
 2021/03/08 14:34:14 Instance UUID:  afbae9c2-e788-42bc-895c-fa0165570547
 2021/03/08 14:34:15 Instance startup succeeded.
 # stop
-❯ nhncloud-instctl stop master001
+❯ nhncloud-instctl stop master001 -r kr1
 2021/03/08 14:34:41 Instance UUID:  afbae9c2-e788-42bc-895c-fa0165570547
 2021/03/08 14:34:42 Instance stoping succeeded.
 ```
@@ -118,3 +118,7 @@ $ nhncloud-instctl version
 # Reference
 
 * [https://github.com/alicek106/go-ec2-ssh-autoconnect](https://github.com/alicek106/go-ec2-ssh-autoconnect)
+
+# Version
+* ver0.1: initial commit
+* ver0.2: select region & print log
