@@ -8,7 +8,7 @@ import (
 // stopCmd represents the stop command
 var stopCmd = &cobra.Command{
 	Use:   "stop <instance_name>",
-	Short: "\nStop the instance.",
+	Short: "Stop the instance.",
 	Run: func(cmd *cobra.Command, args []string) {
 		controller.PauseInstance(args[0], Region)
 	},

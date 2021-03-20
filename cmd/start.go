@@ -8,7 +8,7 @@ import (
 // startCmd represents the start command
 var startCmd = &cobra.Command{
 	Use:   "start <instance_name>",
-	Short: "\nStart the instance.",
+	Short: "Start the instance.",
 	Run: func(cmd *cobra.Command, args []string) {
 		controller.StartInstance(args[0], Region)
 	},
