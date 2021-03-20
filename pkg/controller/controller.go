@@ -11,8 +11,8 @@ import (
 )
 
 // SSHConnect connect to NHN Cloud Instance
-func SSHConnect(instanceName string) {
-	instanceList := instance.GetInstanceList()
+func SSHConnect(instanceName string, region string) {
+	instanceList := instance.GetInstanceList(region)
 
 	var serverUser, floatingIP, privateKey string
 	var isInstance bool
@@ -38,32 +38,32 @@ func SSHConnect(instanceName string) {
 }
 
 // StartInstance start NHN Cloud Instance
-func StartInstance(instanceName string) {
-	serverID := getServerID(instanceName)
+func StartInstance(instanceName string, region string) {
+	serverID := getServerID(instanceName, region)
 	log.Println("Instance UUID: ", serverID)
-	requestStatusCode := instance.PostInstanceStatus("start", serverID)
+	requestStatusCode := instance.PostInstanceStatus("start", serverID, region)
 
 	if requestStatusCode == 202 {
 		log.Println("Instance startup succeeded.")
 	} else if requestStatusCode == 409 {
 		log.Fatal("Cannot start instance ", instanceName, " while it is in vm_state active.")
 	} else {
-		log.Fatal("Instance stoping failed.")
+		log.Fatal("Failed to start instance.")
 	}
 }
 
 // PauseInstance pause NHN Cloud Instance
-func PauseInstance(instanceName string) {
-	serverID := getServerID(instanceName)
+func PauseInstance(instanceName string, region string) {
+	serverID := getServerID(instanceName, region)
 	log.Println("Instance UUID: ", serverID)
-	requestStatusCode := instance.PostInstanceStatus("stop", serverID)
+	requestStatusCode := instance.PostInstanceStatus("stop", serverID, region)
 
 	if requestStatusCode == 202 {
-		log.Fatal("Instance stoping succeeded.")
+		log.Println("Instance stoping succeeded.")
 	} else if requestStatusCode == 409 {
 		log.Fatal("Cannot start instance ", instanceName, " while it is in vm_state stoped.")
 	} else {
-		log.Fatal("Instance stoping failed.")
+		log.Fatal("Failed to stop instance.")
 	}
 }
 
@@ -88,8 +88,8 @@ func setFloatingIP(publicIP string) string {
 	return publicIP
 }
 
-func getServerID(instanceName string) string {
-	exitedInstanceList := instance.GetInstanceList()
+func getServerID(instanceName string, region string) string {
+	exitedInstanceList := instance.GetInstanceList(region)
 
 	var serverID string
 	var isInstance bool = false

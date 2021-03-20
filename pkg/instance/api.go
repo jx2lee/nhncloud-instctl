@@ -81,8 +81,9 @@ func RequestToken() (*ToastConfig, error) {
 }
 
 // RequestInstanceDetails return instanceDetail map[string]interface{}
-func RequestInstanceDetails(token *ToastConfig, tenantID string) (map[string]interface{}, error) {
-	var baseURL string = "https://kr1-api-instance.infrastructure.cloud.toast.com/v2/" + tenantID + "/servers/detail"
+func RequestInstanceDetails(token *ToastConfig, tenantID string, region string) (map[string]interface{}, error) {
+
+	var baseURL string = "https://" + region + "-api-instance.infrastructure.cloud.toast.com/v2/" + tenantID + "/servers/detail"
 	req, err := http.NewRequest("GET", baseURL, nil)
 	req.Header.Set("X-Auth-Token", token.tokenID)
 
@@ -100,12 +101,14 @@ func RequestInstanceDetails(token *ToastConfig, tenantID string) (map[string]int
 	return allRespMap, nil
 }
 
+// var region string = cmd.Region
+
 //PostInstanceStatus request Post to start(or stop) instance
-func PostInstanceStatus(action string, serverID string) int {
+func PostInstanceStatus(action string, serverID string, region string) int {
 	tenantID, _, _, _ := GetEnvparser().GetPasswordCredentials()
 	tokenInfo, _ := RequestToken()
 
-	var requestURL string = "https://kr1-api-instance.infrastructure.cloud.toast.com/v2/" + tenantID + "/servers/" + serverID + "/action"
+	var requestURL string = "https://" + region + "-api-instance.infrastructure.cloud.toast.com/v2/" + tenantID + "/servers/" + serverID + "/action"
 
 	client := &http.Client{}
 	var data *strings.Reader

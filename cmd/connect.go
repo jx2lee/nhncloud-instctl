@@ -15,11 +15,14 @@ var connectCmd = &cobra.Command{
 		if len(args) == 0 {
 			log.Fatal("Not entered instance name. Please check and try again.")
 		}
-		controller.SSHConnect(args[0])
+		controller.SSHConnect(args[0], Region)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(connectCmd)
 	connectCmd.PersistentFlags().StringVar(&name, "name", "", "Enter the name of the instance you want to connect to.")
+	connectCmd.Flags().StringVarP(&Region, "region", "r", "", "set Cloud Region. (kr1, kr2 or jp1)")
+	connectCmd.MarkFlagRequired("region")
+
 }

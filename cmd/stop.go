@@ -1,25 +1,22 @@
 package cmd
 
 import (
-	"log"
-
 	"github.com/jx2lee/nhncloud-instctl/pkg/controller"
 	"github.com/spf13/cobra"
 )
 
 // stopCmd represents the stop command
 var stopCmd = &cobra.Command{
-	Use:   "stop",
-	Short: "Stop the instance.",
+	Use:   "stop <instance_name>",
+	Short: "\nStop the instance.",
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) == 0 {
-			log.Fatal("Not entered instance name. Please check and try again")
-		}
-
-		controller.PauseInstance(args[0])
+		controller.PauseInstance(args[0], Region)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(stopCmd)
+	stopCmd.Flags().StringVarP(&Region, "region", "r", "", "set Cloud Region. (kr1, kr2 or jp1)")
+	stopCmd.MarkFlagRequired("region")
+
 }

@@ -18,14 +18,14 @@ type ListInfo struct {
 }
 
 // ListInstances Print Instance List
-func ListInstances() {
-	instanceList := GetInstanceList()
+func ListInstances(region string) {
+	instanceList := GetInstanceList(region)
 	// print all instance
 	printAllInstance(instanceList)
 }
 
 // GetInstanceList return ListInfo struct
-func GetInstanceList() []ListInfo {
+func GetInstanceList(region string) []ListInfo {
 	// get tenantID
 	tenantID, _, _, err := GetEnvparser().GetPasswordCredentials()
 	if err != nil {
@@ -39,7 +39,7 @@ func GetInstanceList() []ListInfo {
 	}
 
 	// get list for instance
-	responseAPI, err := RequestInstanceDetails(tokenInfo, tenantID)
+	responseAPI, err := RequestInstanceDetails(tokenInfo, tenantID, region)
 	if err != nil {
 		log.Fatal("Failed Request")
 	}
