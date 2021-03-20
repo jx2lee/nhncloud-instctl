@@ -89,7 +89,7 @@ func RequestInstanceDetails(token *ToastConfig, tenantID string, region string) 
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		log.Fatal("Unable to use client")
+		log.Fatal("No region have been selected. Please select kr1, kr2, or jp1.")
 	}
 
 	defer resp.Body.Close()
