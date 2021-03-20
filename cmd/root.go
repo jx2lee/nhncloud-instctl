@@ -26,11 +26,6 @@ CLI for easy management of instances created by NHN Cloud.
 }
 
 func Execute() {
-	rootCmd.SetHelpCommand(&cobra.Command{
-		Use:    "no-help",
-		Hidden: true,
-	})
-
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
