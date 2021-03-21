@@ -1,10 +1,7 @@
 package instance
 
 import (
-	"fmt"
 	"log"
-	"os"
-	"text/tabwriter"
 )
 
 // ListInfo struct
@@ -15,13 +12,6 @@ type ListInfo struct {
 	Status       string
 	PublicIP     string
 	PrivateKey   string
-}
-
-// ListInstances Print Instance List
-func ListInstances(region string) {
-	instanceList := GetInstanceList(region)
-	// print all instance
-	printAllInstance(instanceList)
 }
 
 // GetInstanceList return ListInfo struct
@@ -71,20 +61,4 @@ func GetInstanceDetails(servers interface{}) ([]ListInfo, error) {
 		InstanceDetailList = append(InstanceDetailList, InstanceInfo)
 	}
 	return InstanceDetailList, nil
-}
-
-func printAllInstance(list []ListInfo) {
-	writer := tabwriter.NewWriter(os.Stdout, 16, 8, 2, '\t', 0)
-	fmt.Fprintln(writer, "Instance ID\tInstance Name\tImage Name\tStatus\tPublic IP\tPrivate Key")
-	for _, instance := range list {
-		formatting := fmt.Sprintf("%s\t%s\t%s\t%s\t%s\t%s",
-			instance.InstanceID,
-			instance.InstanceName,
-			instance.ImageName,
-			instance.Status,
-			instance.PublicIP,
-			instance.PrivateKey)
-		fmt.Fprintln(writer, formatting)
-	}
-	writer.Flush()
 }

@@ -6,11 +6,32 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"text/tabwriter"
 
 	"github.com/jx2lee/nhncloud-instctl/pkg/instance"
 )
 
-// SSHConnect connect to NHN Cloud Instance
+// InstanceListOutput: print instance list output
+func InstanceListOutput(region string) {
+	instanceList := instance.GetInstanceList(region)
+
+	// print all instance
+	writer := tabwriter.NewWriter(os.Stdout, 16, 8, 2, '\t', 0)
+	fmt.Fprintln(writer, "Instance ID\tInstance Name\tImage Name\tStatus\tPublic IP\tPrivate Key")
+	for _, instance := range instanceList {
+		formatting := fmt.Sprintf("%s\t%s\t%s\t%s\t%s\t%s",
+			instance.InstanceID,
+			instance.InstanceName,
+			instance.ImageName,
+			instance.Status,
+			instance.PublicIP,
+			instance.PrivateKey)
+		fmt.Fprintln(writer, formatting)
+	}
+	writer.Flush()
+}
+
+// SSHConnect: connect to NHN Cloud Instance
 func SSHConnect(instanceName string, region string) {
 	instanceList := instance.GetInstanceList(region)
 
@@ -37,7 +58,7 @@ func SSHConnect(instanceName string, region string) {
 	cmd.Run()
 }
 
-// StartInstance start NHN Cloud Instance
+// StartInstance: start NHN Cloud Instance
 func StartInstance(instanceName string, region string) {
 	serverID := getServerID(instanceName, region)
 	log.Println("Instance UUID: ", serverID)
@@ -52,7 +73,7 @@ func StartInstance(instanceName string, region string) {
 	}
 }
 
-// PauseInstance pause NHN Cloud Instance
+// PauseInstance: pause NHN Cloud Instance
 func PauseInstance(instanceName string, region string) {
 	serverID := getServerID(instanceName, region)
 	log.Println("Instance UUID: ", serverID)
