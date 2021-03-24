@@ -110,9 +110,10 @@ $ nhncloud-instctl {start or start} {exiting_instance_name} -r {region kr1, kr2 
 
 ## Print Version
 
-Print binary verison.
+Print nhncloud-instctl verison.
+
 ```bash
-$ nhncloud-instctl version
+$ nhncloud-instctl --version
 ```
 
 # Reference
