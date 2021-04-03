@@ -1,9 +1,8 @@
 package cmd
 
 import (
-	"log"
-
 	"github.com/jx2lee/nhncloud-instctl/pkg/controller"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -13,7 +12,7 @@ var connectCmd = &cobra.Command{
 	Short: "Connect to Instance.",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			log.Fatal("Not entered instance name. Please check and try again.")
+			logrus.Fatal("Not entered instance name. Please check and try again.")
 		}
 		controller.SSHConnect(args[0], Region)
 	},

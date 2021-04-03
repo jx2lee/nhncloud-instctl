@@ -8,6 +8,10 @@ import (
 )
 
 var Region string
+var IaasInstanceId string
+var FIPId string
+var PortId string
+
 var rootCmd = &cobra.Command{
 	Use: "nhncloud-instctl",
 	Version: "0.2",
