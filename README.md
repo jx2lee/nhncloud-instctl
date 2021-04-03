@@ -12,6 +12,7 @@ The following features are provided by this script:
 * Connect to the instance.
 * Start and stop the instance.
 * Check the script version.
+* Manage RDS instance.
 
 # How to Install
 
@@ -114,6 +115,7 @@ Print nhncloud-instctl verison.
 
 ```bash
 $ nhncloud-instctl --version
+$ nhncloud-instctl -v
 ```
 
 # Reference
@@ -123,3 +125,4 @@ $ nhncloud-instctl --version
 # Version
 * ver0.1: initial commit
 * ver0.2: select region & print log
+  * add rds module
