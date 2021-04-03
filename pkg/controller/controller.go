@@ -2,7 +2,7 @@ package controller
 
 import (
 	"fmt"
-	"log"
+	"github.com/sirupsen/logrus"
 	"os"
 	"os/exec"
 	"strings"
@@ -46,10 +46,10 @@ func SSHConnect(instanceName string, region string) {
 		}
 	}
 	if isInstance == false {
-		log.Fatal("The instance you entered does not exist. Please recheck the list and try to connect.")
+		logrus.Fatal("The instance you entered does not exist. Please recheck the list and try to connect.")
 	}
 	keyPath := instance.GetEnvparser().GetPrivateKeyPath(privateKey[:len(privateKey)-4])
-	log.Println("ssh", fmt.Sprintf("-i%s", keyPath), fmt.Sprintf("%s@%s", serverUser, floatingIP))
+	logrus.Info("ssh", fmt.Sprintf("-i%s", keyPath), fmt.Sprintf("%s@%s", serverUser, floatingIP))
 
 	cmd := exec.Command("ssh", fmt.Sprintf("-i%s", keyPath), fmt.Sprintf("%s@%s", serverUser, floatingIP))
 	cmd.Stdin = os.Stdin
@@ -61,30 +61,32 @@ func SSHConnect(instanceName string, region string) {
 // StartInstance: start NHN Cloud Instance
 func StartInstance(instanceName string, region string) {
 	serverID := getServerID(instanceName, region)
-	log.Println("Instance UUID: ", serverID)
+	logrus.Info("Instance UUID: ", serverID)
+
 	requestStatusCode := instance.PostInstanceStatus("start", serverID, region)
 
 	if requestStatusCode == 202 {
-		log.Println("Instance startup succeeded.")
+		logrus.Info("Instance startup succeeded.")
 	} else if requestStatusCode == 409 {
-		log.Fatal("Cannot start instance ", instanceName, " while it is in vm_state active.")
+		logrus.Fatal("Cannot start instance ", instanceName, " while it is in vm_state active.")
 	} else {
-		log.Fatal("Failed to start instance.")
+		logrus.Fatal("Failed to start instance.")
 	}
 }
 
 // PauseInstance: pause NHN Cloud Instance
 func PauseInstance(instanceName string, region string) {
 	serverID := getServerID(instanceName, region)
-	log.Println("Instance UUID: ", serverID)
+	logrus.Info("Instance UUID: ", serverID)
+
 	requestStatusCode := instance.PostInstanceStatus("stop", serverID, region)
 
 	if requestStatusCode == 202 {
-		log.Println("Instance stoping succeeded.")
+		logrus.Info("Instance stoping succeeded.")
 	} else if requestStatusCode == 409 {
-		log.Fatal("Cannot start instance ", instanceName, " while it is in vm_state stoped.")
+		logrus.Fatal("Cannot start instance ", instanceName, " while it is in vm_state stoped.")
 	} else {
-		log.Fatal("Failed to stop instance.")
+		logrus.Fatal("Failed to stop instance.")
 	}
 }
 
@@ -97,14 +99,14 @@ func setServerUser(imageName string) string {
 	} else if strings.Contains(imageName, "Debian") == true {
 		serverUser = "debian"
 	} else {
-		log.Fatal("Windows server is not supported. Please connect to another instance.")
+		logrus.Fatal("Windows server is not supported. Please connect to another instance.")
 	}
 	return serverUser
 }
 
 func setFloatingIP(publicIP string) string {
 	if publicIP == "None" {
-		log.Fatal("You cannot access the instance. After creating FloatingIP, add it to the instance and try.")
+		logrus.Fatal("You cannot access the instance. After creating FloatingIP, add it to the instance and try.")
 	}
 	return publicIP
 }
@@ -113,7 +115,7 @@ func getServerID(instanceName string, region string) string {
 	exitedInstanceList := instance.GetInstanceList(region)
 
 	var serverID string
-	var isInstance bool = false
+	var isInstance = false
 	for _, instance := range exitedInstanceList {
 		if instance.InstanceName == instanceName {
 			serverID = instance.InstanceID
@@ -122,7 +124,7 @@ func getServerID(instanceName string, region string) string {
 	}
 
 	if isInstance == false {
-		log.Fatal("The instance you entered does not exist. Please recheck the list and try to connect.")
+		logrus.Fatal("The instance you entered does not exist. Please recheck the list and try to connect.")
 	}
 
 	return serverID

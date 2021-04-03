@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -12,8 +13,8 @@ import (
 
 // ToastConfig struct
 type ToastConfig struct {
-	tokenID    string
-	expireDate string
+	TokenID    string
+	ExpireDate string
 }
 
 // Payload struct
@@ -36,7 +37,7 @@ type Auth struct {
 // RequestToken return token info
 func RequestToken() (*ToastConfig, error) {
 	tenantID, userName, passWord, _ := GetEnvparser().GetPasswordCredentials()
-	var tokenURL string = "https://api-identity.infrastructure.cloud.toast.com/v2.0/tokens"
+	var tokenURL = "https://api-identity.infrastructure.cloud.toast.com/v2.0/tokens"
 	data := Payload{
 		Auth: Auth{
 			TenantID: tenantID,
@@ -49,19 +50,19 @@ func RequestToken() (*ToastConfig, error) {
 
 	payloadBytes, err := json.Marshal(data)
 	if err != nil {
-		log.Fatal("Unable to encode data: ", data)
+		logrus.Fatal("Unable to encode data: ", data)
 	}
 
 	body := bytes.NewReader(payloadBytes)
 	req, err := http.NewRequest("POST", tokenURL, body)
 	if err != nil {
-		log.Fatal("Request Failed: " + tokenURL)
+		logrus.Fatal("Failed to generate request: " + tokenURL)
 	}
 
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		log.Fatal("Unable to use client")
+		logrus.Fatal("Request Failed.")
 	}
 
 	defer resp.Body.Close()
@@ -69,34 +70,37 @@ func RequestToken() (*ToastConfig, error) {
 	allRespBytes, _ := ioutil.ReadAll(resp.Body)
 	allRespMap := make(map[string]interface{})
 	if err := json.Unmarshal(allRespBytes, &allRespMap); err != nil {
-		log.Fatal(err)
+		logrus.Fatal("Decode failed: ", allRespBytes)
 	}
 
 	tokenInfo := allRespMap["access"].(interface{}).(map[string]interface{})["token"]
 
 	toastConfig := ToastConfig{}
-	toastConfig.tokenID = fmt.Sprint(tokenInfo.(interface{}).(map[string]interface{})["id"])
-	toastConfig.expireDate = fmt.Sprint(tokenInfo.(interface{}).(map[string]interface{})["expires"])
+	toastConfig.TokenID = fmt.Sprint(tokenInfo.(interface{}).(map[string]interface{})["id"])
+	toastConfig.ExpireDate = fmt.Sprint(tokenInfo.(interface{}).(map[string]interface{})["expires"])
 	return &toastConfig, nil
 }
 
 // RequestInstanceDetails return instanceDetail map[string]interface{}
 func RequestInstanceDetails(token *ToastConfig, tenantID string, region string) (map[string]interface{}, error) {
 
-	var baseURL string = "https://" + region + "-api-instance.infrastructure.cloud.toast.com/v2/" + tenantID + "/servers/detail"
+	var baseURL = "https://" + region + "-api-instance.infrastructure.cloud.toast.com/v2/" + tenantID + "/servers/detail"
 	req, err := http.NewRequest("GET", baseURL, nil)
-	req.Header.Set("X-Auth-Token", token.tokenID)
+	if err != nil {
+		logrus.Fatal("Failed to generate request: " + baseURL)
+	}
 
+	req.Header.Set("X-Auth-Token", token.TokenID)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		log.Fatal("No region have been selected. Please select kr1, kr2, or jp1.")
+		logrus.Fatal("No region have been selected. Please select kr1, kr2, or jp1.")
 	}
 
 	defer resp.Body.Close()
 	allRespBytes, _ := ioutil.ReadAll(resp.Body)
 	allRespMap := make(map[string]interface{})
 	if err := json.Unmarshal(allRespBytes, &allRespMap); err != nil {
-		log.Fatal(err)
+		logrus.Fatal("Decode failed: ", allRespBytes)
 	}
 	return allRespMap, nil
 }
@@ -108,7 +112,7 @@ func PostInstanceStatus(action string, serverID string, region string) int {
 	tenantID, _, _, _ := GetEnvparser().GetPasswordCredentials()
 	tokenInfo, _ := RequestToken()
 
-	var requestURL string = "https://" + region + "-api-instance.infrastructure.cloud.toast.com/v2/" + tenantID + "/servers/" + serverID + "/action"
+	var requestURL = "https://" + region + "-api-instance.infrastructure.cloud.toast.com/v2/" + tenantID + "/servers/" + serverID + "/action"
 
 	client := &http.Client{}
 	var data *strings.Reader
@@ -120,13 +124,13 @@ func PostInstanceStatus(action string, serverID string, region string) int {
 
 	req, err := http.NewRequest("POST", requestURL, data)
 	if err != nil {
-		log.Fatal(err)
+		logrus.Fatal("Failed to generate request: " + requestURL)
 	}
-	req.Header.Set("X-Auth-Token", tokenInfo.tokenID)
+	req.Header.Set("X-Auth-Token", tokenInfo.TokenID)
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("The request to stop or start the instance failed. Check the header. ")
 	}
 	defer resp.Body.Close()
 

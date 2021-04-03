@@ -1,7 +1,7 @@
 package instance
 
 import (
-	"log"
+	"github.com/sirupsen/logrus"
 )
 
 // ListInfo struct
@@ -19,22 +19,26 @@ func GetInstanceList(region string) []ListInfo {
 	// get tenantID
 	tenantID, _, _, err := GetEnvparser().GetPasswordCredentials()
 	if err != nil {
-		log.Fatal("Unable Get TennantID.")
+		logrus.Fatal("Unable Get TennantID. Check the toast-config.yaml file.")
 	}
 
 	// get token
 	tokenInfo, err := RequestToken()
 	if err != nil {
-		log.Fatal("Failed Get Token.")
+		logrus.Fatal("Failed Get Token. Check the toast-config.yaml file.")
 	}
 
 	// get list for instance
 	responseAPI, err := RequestInstanceDetails(tokenInfo, tenantID, region)
 	if err != nil {
-		log.Fatal("Failed Request")
+		logrus.Fatal("Failed RequestInstanceDetails. Retry or Hold on a minute, please.")
 	}
 	instanceDetails := responseAPI["servers"]
+
 	list, err := GetInstanceDetails(instanceDetails)
+	if err != nil {
+		logrus.Fatal("Failed GetInstanceDetails. Retry or Hold on a minute, please.")
+	}
 
 	return list
 }
