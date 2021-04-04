@@ -1,21 +1,21 @@
 package cmd
 
 import (
-	"github.com/jx2lee/nhncloud-instctl/pkg/rds"
+	"github.com/jx2lee/nhncloud-instctl/pkg/network"
 
 	"github.com/spf13/cobra"
 )
 
 var rdsCmd = &cobra.Command{
-	Use:   "rds",
-	Short: "NHN Cloud RDS-Related Commands",
+	Use:   "network",
+	Short: "NHN Cloud Network Commands",
 }
 
 var getPortInfoCmd = &cobra.Command{
 	Use:   "get-port",
 	Short: "Look up the port on the iaas instance.",
 	Run: func(cmd *cobra.Command, args []string) {
-		rds.GetIaasInstancePortInfo(IaasInstanceId)
+		network.GetIaasInstancePortInfo(IaasInstanceId)
 	},
 }
 
@@ -23,7 +23,7 @@ var attachFipCmd = &cobra.Command{
 	Use:   "attach-fip",
 	Short: "Connect the fip to the new instance.",
 	Run: func(cmd *cobra.Command, args []string) {
-		rds.AttachFip(FIPId, PortId)
+		network.AttachFip(FIPId, PortId)
 	},
 }
 

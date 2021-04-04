@@ -1,5 +1,4 @@
-package rds
-
+package network
 
 import (
 	"bytes"
@@ -21,7 +20,7 @@ type Floatingip struct {
 }
 
 
-func requestRDSToken() (*ToastConfig, error) {
+func requestToken() (*ToastConfig, error) {
 	tenantID, userName, passWord, _ := instance.GetEnvparser("rds").GetPasswordCredentials()
 	tokenURL := "https://api-identity.infrastructure.cloud.toast.com/v2.0/tokens"
 
@@ -69,7 +68,7 @@ func requestRDSToken() (*ToastConfig, error) {
 }
 
 func GetIaasInstancePortInfo(iaasInstanceId string) {
-	tokenInfo, err := requestRDSToken()
+	tokenInfo, err := requestToken()
 	logrus.Info("Token-ID: ", tokenInfo.TokenID)
 	if err != nil {
 		logrus.Fatal("Failed Get Token.")
@@ -103,7 +102,7 @@ func GetIaasInstancePortInfo(iaasInstanceId string) {
 }
 
 func AttachFip(floatingIpId string, portId string) {
-	tokenInfo, err := requestRDSToken()
+	tokenInfo, err := requestToken()
 	if err != nil {
 		logrus.Fatal("Failed Get Token.")
 	}
