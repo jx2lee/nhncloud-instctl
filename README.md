@@ -135,8 +135,8 @@ Use "nhncloud-instctl network [command] --help" for more information about a com
 Print nhncloud-instctl verison.
 
 ```bash
-$ nhncloud-instctl --version
-$ nhncloud-instctl -v
+❯ nhncloud-instctl --version
+❯ nhncloud-instctl -v
 ```
 
 # Reference
