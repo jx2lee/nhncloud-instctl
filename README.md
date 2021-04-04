@@ -1,6 +1,6 @@
 # NHN Cloud Instance CTL
 
-This repository is a cli program that manages nhncloud instances and was developed as Golang.
+This repository is a cli program that manages nhncloud instances and was written in Golang.
 
 ![](gif/intro.gif)
 
@@ -12,7 +12,7 @@ The following features are provided by this script:
 * Connect to the instance.
 * Start and stop the instance.
 * Check the script version.
-* Manage RDS instance.
+* Manage Network for instance.
 
 # How to Install
 
@@ -20,12 +20,12 @@ The following features are provided by this script:
 
 ```bash
 # in macos..
-$ wget https://github.com/jx2lee/nhncloud-instctl/releases/download/v0.2/nhncloud-instctl-darwin && \
+❯ wget https://github.com/jx2lee/nhncloud-instctl/releases/download/v0.2/nhncloud-instctl-darwin && \
        chmod +x nhncloud-instctl-darwin && \
        mv nhncloud-instctl-darwin /usr/local/bin/nhncloud-instctl
 
 # in linux(x86_64)..
-$ wget https://github.com/jx2lee/nhncloud-instctl/releases/download/v0.2/nhncloud-instctl-Linux-x86-64 && \
+❯ wget https://github.com/jx2lee/nhncloud-instctl/releases/download/v0.2/nhncloud-instctl-Linux-x86-64 && \
        chmod +x nhncloud-instctl-Linux-x86-64 && \
        mv nhncloud-instctl-Linux-x86-64 /usr/local/bin/nhncloud-instctl
 ```
@@ -60,7 +60,7 @@ Configuration file consists of two part.
 
 The ability to check the list of instances.  
 ```bash
-$ nhncloud-instctl list -r {region kr1, kr2 or jp1}
+❯ nhncloud-instctl list -r {region kr1, kr2 or jp1}
 ```
 
 ```bash
@@ -81,7 +81,7 @@ Instance ID     Instance Name   Image Name      Status          Public IP       
 
 The ability to connect to the existing instance.  
 ```bash
-$ nhncloud-instctl connect {exiting_instance_name} -r {region kr1, kr2 or jp1}
+❯ nhncloud-instctl connect {exiting_instance_name} -r {region kr1, kr2 or jp1}
 ```
 
 ```bash
@@ -95,7 +95,7 @@ Last login: Sat Mar 20 13:12:17 2021 from 211.178.107.54
 
 The ability to start or stop the existing instance.  
 ```bash
-$ nhncloud-instctl {start or start} {exiting_instance_name} -r {region kr1, kr2 or jp1}
+❯ nhncloud-instctl {start or start} {exiting_instance_name} -r {region kr1, kr2 or jp1}
 ```
 
 ```bash
@@ -108,6 +108,27 @@ $ nhncloud-instctl {start or start} {exiting_instance_name} -r {region kr1, kr2 
 2021/03/08 14:34:41 Instance UUID:  afbae9c2-e788-42bc-895c-fa0165570547
 2021/03/08 14:34:42 Instance stoping succeeded.
 ```
+
+## Manage Network for instance
+
+The ability to manage network for the existing instance. `get-port` & `attach-fip`
+```bash
+❯ nhncloud-instctl network
+NHN Cloud Network Commands
+
+Usage:
+  nhncloud-instctl network [command]
+
+Available Commands:
+  attach-fip  Connect the fip to the new instance.
+  get-port    Look up the port on the iaas instance.
+
+Flags:
+  -h, --help   help for network
+
+Use "nhncloud-instctl network [command] --help" for more information about a command.
+```
+
 
 ## Print Version
 
@@ -125,4 +146,4 @@ $ nhncloud-instctl -v
 # Version
 * ver0.1: initial commit
 * ver0.2: select region & print log
-  * add rds module
+  * add network package
