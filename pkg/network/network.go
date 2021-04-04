@@ -77,11 +77,14 @@ func GetIaasInstancePortInfo(iaasInstanceId string) {
 
 	var baseURL = "http://iaas.tcc1.cloud.toastoven.net/network/v2.0/ports?device_id=" + iaasInstanceId
 	req, err := http.NewRequest("GET", baseURL, nil)
-	req.Header.Set("X-Auth-Token", tokenInfo.TokenID)
+	if err != nil {
+		logrus.Fatal("Request Failed: " + baseURL)
+	}
 
+	req.Header.Set("X-Auth-Token", tokenInfo.TokenID)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		logrus.Fatal("No region have been selected. Please select kr1, kr2, or jp1.")
+		logrus.Fatal("Request Failed.")
 	}
 
 	defer resp.Body.Close()
@@ -91,7 +94,11 @@ func GetIaasInstancePortInfo(iaasInstanceId string) {
 		logrus.Fatal(err)
 	}
 
-	portInfo, _ := prettyPrintJSON(allRespBytes)
+	portInfo, err := prettyPrintJSON(allRespBytes)
+	if err != nil {
+		logrus.Fatal("Failed to change to json format.")
+	}
+
 	fmt.Printf("%s", portInfo)
 }
 
@@ -115,15 +122,16 @@ func AttachFip(floatingIpId string, portId string) {
 	var baseURL = "http://iaas.tcc1.cloud.toastoven.net/network/v2.0/floatingips/" + floatingIpId
 	req, err := http.NewRequest("PUT", baseURL, body)
 	if err != nil {
-		logrus.Fatal("Hmm..")
+		logrus.Fatal("Request Failed: " + baseURL)
 	}
+
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("X-Auth-Token", tokenInfo.TokenID)
-
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		logrus.Fatal("Hmm..")
+		logrus.Fatal("Request Failed.")
 	}
+
 	defer resp.Body.Close()
 	allRespBytes, _ := ioutil.ReadAll(resp.Body)
 	allRespMap := make(map[string]interface{})
@@ -131,7 +139,11 @@ func AttachFip(floatingIpId string, portId string) {
 		logrus.Fatal(err)
 	}
 
-	responseAttachInfo, _ := prettyPrintJSON(allRespBytes)
+	responseAttachInfo, err := prettyPrintJSON(allRespBytes)
+	if err != nil {
+		logrus.Fatal("Failed to change to json format.")
+	}
+
 	fmt.Printf("%s", responseAttachInfo)
 }
 
